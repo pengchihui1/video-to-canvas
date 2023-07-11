@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Example</title>
+</head>
+<body>
+  <video id="video" width="640" height="480" autoplay></video>
+  <canvas id="canvas" width="760" height="1024"></canvas>
+
+  <script>
+    var video = document.getElementById('video');
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    // 获取用户的摄像头
+    navigator.mediaDevices.getUserMedia({video: true})
+      .then(function(stream) {
+        // 将摄像头捕捉到的视频流绑定到video元素上
+        video.srcObject = stream;
+      })
+      .catch(function(error) {
+        console.log('getUserMedia error: ' + error);
+      });
+
+    // 等待视频加载完毕后开始绘制
+    video.addEventListener('loadedmetadata', function() {
+      // 等待视频播放后开始绘制
+      video.addEventListener('play', function() {
+        // 定时绘制视频帧
+        setInterval(function() {
+          // 将原始视频帧绘制到canvas元素上
+          ctx.imageSmoothingEnabled = false;
+          canvas.width= 760
+          canvas.height= 1024
+          ctx.drawImage(video, 0, 0 , 640, 480, -(1024/480*640 -760)/2, 0 , 1024/480*640, 1024);
+        }, 1000 / 30); // 每秒绘制30帧
+      });
+    });
+  </script>
+</body>
+</html>
